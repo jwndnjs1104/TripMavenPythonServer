@@ -79,11 +79,21 @@ def read_user(user_id: int, db: Session = Depends(get_db)): #세션 객체 의�
 
 #api 사용
 #api 패키지 내에서 파일 가져오기
-from app.api import ocr, object_detect
+from app.api import ocr
+from app.api import stt
 # 라우터를 등록
 # main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
 app.include_router(ocr.router, prefix="/ocr", tags=["OCR"])
-app.include_router(object_detect.router, prefix="/object-detect", ags=["Object Detection"])
+app.include_router(stt.router, prefix="/stt", tags=["STT"])
+
+#큐넷 자격증 진위확인
+#성명
+#생년월일 (주민등록번호 앞 6자리)
+#자격증번호 (12345678901A)
+#발급연월일 (20050101)
+#자격증내지번호 (0901234567) #2009년 8월 3일 이후 발행자격증은 반드시 기재
+#셀레니움 사용해서 하면 될거같은데...
+#https://www.q-net.or.kr/qlf006.do?id=qlf00601&gSite=Q&gId=
 
 if __name__ == "__main__":
     import uvicorn
