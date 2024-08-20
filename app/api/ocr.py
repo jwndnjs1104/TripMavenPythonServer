@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Form
 from app.services.ocr_service import OCRService
+from fastapi.responses import RedirectResponse
 
 #APIRouter 객체를 사용한 라우팅, main에서 최종적으로 엔트포인트 설정하고 라우팅하면 된다.
 router = APIRouter()
 ocr_service = OCRService()
 
-#여기서 엔드포인트 설정하는게 아니라 그냥 기본으로 "/"설정해 주면 됨
 @router.post("/")
 async def detect(base64Encoded: str = Form(...), ocrValue: str = Form(...)):
     '''
