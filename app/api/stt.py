@@ -8,7 +8,7 @@ id = 'yq1nf7y6jv'
 secret_key = '5A8yk14sOGVhEHo6hmg4Kkw6ihf67c5SdgkayXuc'
 
 @router.post("/")
-async def speechToText(filepath: str = Form(...)):
+async def speech_to_text(filepath: str = Form(...)):
     client_id = id
     client_secret = secret_key
     lang = "Kor"  # 언어 코드 ( Kor, Jpn, Eng, Chn )

@@ -1,16 +1,17 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware #fastapi 서버의 CORS 설정
-import asyncio
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, FastAPI, HTTPException, Form, File, UploadFile
 from sqlalchemy.orm import Session
 from app.models.users import Users
 from app.db.session import get_db
+import base64
 
 app = FastAPI()
 
 # Spring Boot 서버의 도메인을 여기에 추가
 origins = [
-    "http://localhost:9099" # 예시로, Spring Boot 서버가 실행되는 도메인
+    "*"
+    #http://localhost:9099
 ]
 
 #스프링에서 오는 요청 CORS 설정
@@ -75,25 +76,32 @@ def read_user(user_id: int, db: Session = Depends(get_db)): #세션 객체 의�
     return user
 
 #====================================================================================================
-#실질적인 api사용하기 위해서는 아래와 같이 하면 될 것 같음
-
 #api 사용
-#api 패키지 내에서 파일 가져오기
 from app.api import ocr
 from app.api import stt
-# 라우터를 등록
-# main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
-app.include_router(ocr.router, prefix="/ocr", tags=["OCR"])
-app.include_router(stt.router, prefix="/stt", tags=["STT"])
+from app.api import verification_guide_license
 
-#큐넷 자격증 진위확인
+@app.get("/license")
+async def verify_license():
+    # 이미지 파일 읽기
+    #image_data = await image.read()
+    # Base64로 인코딩
+    #encoded_image = base64.b64encode(image_data).decode('utf-8')
+
+    return {'result': '아 왜 안나와'}
+
+# 라우터 등록
+# main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
+app.include_router(ocr.router, prefix="/ocr")
+app.include_router(stt.router, prefix="/stt")
+
+#큐넷 자격증 진위확인 서비스
 #성명
-#생년월일 (주민등록번호 앞 6자리)
-#자격증번호 (12345678901A)
-#발급연월일 (20050101)
-#자격증내지번호 (0901234567) #2009년 8월 3일 이후 발행자격증은 반드시 기재
-#셀레니움 사용해서 하면 될거같은데...
+#자격증관리번호: 중간에 08로 나눠서 양쪽 번호 넣기
+#셀레니움 사용
+#사이트 url
 #https://www.q-net.or.kr/qlf006.do?id=qlf00601&gSite=Q&gId=
+#app.include_router(verification_guide_license.router) #license
 
 if __name__ == "__main__":
     import uvicorn
