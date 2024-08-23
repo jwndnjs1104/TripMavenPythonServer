@@ -9,10 +9,8 @@ import base64
 app = FastAPI()
 
 # Spring Boot 서버의 도메인을 여기에 추가
-origins = [
-    "*"
-    #http://localhost:9099
-]
+#http://localhost:9099
+origins = ["*"]
 
 #스프링에서 오는 요청 CORS 설정
 app.add_middleware(
@@ -27,6 +25,10 @@ app.add_middleware(
 @app.get("/")
 async def read_root():
     return {"message": "Hello World"}
+
+@app.get("/test")
+async def verify_license():
+    return {"result": "아 왜 안나와"}
 
 #db 연결 예시 코드
 @app.get("/users/{user_id}")
@@ -81,14 +83,6 @@ from app.api import ocr
 from app.api import stt
 from app.api import verification_guide_license
 
-@app.get("/license")
-async def verify_license():
-    # 이미지 파일 읽기
-    #image_data = await image.read()
-    # Base64로 인코딩
-    #encoded_image = base64.b64encode(image_data).decode('utf-8')
-
-    return {'result': '아 왜 안나와'}
 
 # 라우터 등록
 # main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
