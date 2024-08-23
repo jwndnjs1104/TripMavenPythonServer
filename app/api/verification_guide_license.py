@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Form, File, UploadFile
 from app.services.ocr_service import OCRService
-#from app.services.verifyLicense_service import VerificationGuideLicense
+from app.services.verifyLicense_service import VerifyLicenseService
 import base64
 
 router = APIRouter()
 ocr_service = OCRService()
-#verify_guide_license = VerificationGuideLicense()
+verify_license_service = VerifyLicenseService()
 
 @router.post("/license")
 async def varify_license(image: UploadFile):
@@ -17,17 +17,32 @@ async def varify_license(image: UploadFile):
         image_data = await image.read()
         # Base64로 인코딩
         encoded_image = base64.b64encode(image_data).decode('utf-8')
-        print(encoded_image)
-        #detects = ocr_service.ocr_detect(encoded_image)
 
-        '''
-        ocr 돌린것 중에서 이름이랑 자격증 관리번호 가져와서 밑에 verify에 넣어주기
-        '''
+        detects = ocr_service.ocr_detect(encoded_image)
+        print(detects)
 
-        #isVerify = verify_guide_license.verify(name, regnum1, regnum2)
+        list_ = detects[0].split('\n')
+        print(list_)
+
+        name = ''
+        number = ''
+        for element in list_:
+            if '관리번호' in element:
+                number = element.replace('관리번호','').replace(':','').strip()
+            elif '성명' in element:
+                name = element.replace('성명','').replace(':','').strip()
+
+        regnum1 = ''
+        regnum2 = ''
+        if '-08-' in number:
+            regnum1, regnum2 = number.split('-08-')
+
+        print(name, regnum1, regnum2)
+
+        isVerify = verify_license_service.verify(name, regnum1, regnum2)
 
     except:
         raise HTTPException(status_code=404, detail="Detection failed")
 
-    return {"result":"test"}
+    return {"result":isVerify}
 

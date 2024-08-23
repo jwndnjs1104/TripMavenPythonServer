@@ -31,6 +31,7 @@ async def verify_license():
     return {"result": "아 왜 안나와"}
 
 #db 연결 예시 코드
+'''
 @app.get("/users/{user_id}")
 def read_user(user_id: int, db: Session = Depends(get_db)): #세션 객체 의존성 주입 받는다, db연결을 위한 세션 객체임
     #db.query(Users)는 Users테이블에 대해서 쿼리를 실행한다는 뜻
@@ -76,6 +77,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)): #세션 객체 의�
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+'''
 
 #====================================================================================================
 #api 사용
@@ -95,7 +97,7 @@ app.include_router(stt.router, prefix="/stt")
 #셀레니움 사용
 #사이트 url
 #https://www.q-net.or.kr/qlf006.do?id=qlf00601&gSite=Q&gId=
-#app.include_router(verification_guide_license.router) #license
+app.include_router(verification_guide_license.router) #license
 
 if __name__ == "__main__":
     import uvicorn
