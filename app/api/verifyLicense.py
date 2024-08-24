@@ -7,11 +7,8 @@ router = APIRouter()
 ocr_service = OCRService()
 verify_license_service = VerifyLicenseService()
 
-@router.post("/license")
+@router.post("/")
 async def varify_license(image: UploadFile):
-    '''
-    파일로 받아서 베이스64인코딩해서 ocr로 넘기기
-    '''
     try:
         # 이미지 파일 읽기
         image_data = await image.read()
@@ -42,7 +39,7 @@ async def varify_license(image: UploadFile):
         isVerify = verify_license_service.verify(name, regnum1, regnum2)
 
     except:
-        raise HTTPException(status_code=404, detail="Detection failed")
+        raise HTTPException(status_code=404, detail="License Verification failed")
 
     return {"result":isVerify}
 
