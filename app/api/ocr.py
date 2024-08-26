@@ -40,8 +40,8 @@ async def detect(image: UploadFile, ocrValue: str = Form(...)):
         elif element == '명':
             print(element, index)
             name = list_[index+1].strip()
-        elif '정보처리기사' in element:
-            subject = '정보처리기사'
+        elif '자 격 명' in element:
+            subject = element.replace('자 격 명','').strip()
 
     return {'name':name, 'number':number, 'subject':subject}
 
