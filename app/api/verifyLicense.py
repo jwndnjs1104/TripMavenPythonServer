@@ -6,19 +6,21 @@ import base64
 router = APIRouter()
 ocr_service = OCRService()
 verify_license_service = VerifyLicenseService()
+#base64Encoded: str = Form(...)
+#image: UploadFile
 
 @router.post("/")
-async def varify_license(image: UploadFile):
+async def varify_license(detects_result: str = Form(...)):
     try:
         # 이미지 파일 읽기
-        image_data = await image.read()
+        #image_data = await image.read()
         # Base64로 인코딩
-        encoded_image = base64.b64encode(image_data).decode('utf-8')
+        #encoded_image = base64.b64encode(image_data).decode('utf-8')
 
-        detects = ocr_service.ocr_detect(encoded_image)
-        print(detects)
+        #detects = ocr_service.ocr_detect(encoded_image)
+        #print(detects)
 
-        list_ = detects[0].split('\n')
+        list_ = detects_result[0].split('\n')
         print(list_)
 
         name = ''
