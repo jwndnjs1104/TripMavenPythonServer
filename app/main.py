@@ -1,17 +1,16 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware #fastapi 서버의 CORS 설정
-import asyncio
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, FastAPI, HTTPException, Form, File, UploadFile
 from sqlalchemy.orm import Session
 from app.models.users import Users
 from app.db.session import get_db
+import base64
 
 app = FastAPI()
 
 # Spring Boot 서버의 도메인을 여기에 추가
-origins = [
-    "http://localhost:9099" # 예시로, Spring Boot 서버가 실행되는 도메인
-]
+#http://localhost:9099
+origins = ["*"]
 
 #스프링에서 오는 요청 CORS 설정
 app.add_middleware(
@@ -27,7 +26,12 @@ app.add_middleware(
 async def read_root():
     return {"message": "Hello World"}
 
+@app.get("/test")
+async def verify_license():
+    return {"result": "아 왜 안나와"}
+
 #db 연결 예시 코드
+'''
 @app.get("/users/{user_id}")
 def read_user(user_id: int, db: Session = Depends(get_db)): #세션 객체 의존성 주입 받는다, db연결을 위한 세션 객체임
     #db.query(Users)는 Users테이블에 대해서 쿼리를 실행한다는 뜻
@@ -73,27 +77,27 @@ def read_user(user_id: int, db: Session = Depends(get_db)): #세션 객체 의�
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+'''
 
 #====================================================================================================
-#실질적인 api사용하기 위해서는 아래와 같이 하면 될 것 같음
-
 #api 사용
-#api 패키지 내에서 파일 가져오기
 from app.api import ocr
 from app.api import stt
-# 라우터를 등록
-# main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
-app.include_router(ocr.router, prefix="/ocr", tags=["OCR"])
-app.include_router(stt.router, prefix="/stt", tags=["STT"])
+from app.api import verifyLicense
+from app.api import pronEvaluation
 
-#큐넷 자격증 진위확인
-#성명
-#생년월일 (주민등록번호 앞 6자리)
-#자격증번호 (12345678901A)
-#발급연월일 (20050101)
-#자격증내지번호 (0901234567) #2009년 8월 3일 이후 발행자격증은 반드시 기재
-#셀레니움 사용해서 하면 될거같은데...
-#https://www.q-net.or.kr/qlf006.do?id=qlf00601&gSite=Q&gId=
+# 라우터 등록
+# main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
+app.include_router(ocr.router, prefix="/ocr") #테스트용으로 해봤음
+app.include_router(stt.router, prefix="/stt") #테스트용으로 해봤음
+
+#큐넷 자격증 진위확인 서비스
+#폼데이터로 이미지를 보내면(key는 image로 설정해야 함) 이름이랑 관리번호 추출해서 셀레니움으로 처리
+app.include_router(verifyLicense.router, prefix="/license")
+
+app.include_router(pronEvaluation.router, prefix="/pron")
+
+
 
 if __name__ == "__main__":
     import uvicorn

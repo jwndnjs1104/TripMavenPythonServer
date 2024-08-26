@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Form
-from app.services.ocr_service import OCRService
+from fastapi import APIRouter, Form, UploadFile
 import sys
 import requests
 
@@ -8,21 +7,20 @@ id = 'yq1nf7y6jv'
 secret_key = '5A8yk14sOGVhEHo6hmg4Kkw6ihf67c5SdgkayXuc'
 
 @router.post("/")
-async def speechToText(filepath: str = Form(...)):
+async def speech_to_text(voice: UploadFile):
+    # 음성 파일 읽기
+    # 음성 데이터 포맷은 mp3, aac, ac3, ogg, flac, wav
+    voice_data = await voice.read()
+
     client_id = id
     client_secret = secret_key
-    lang = "Kor"  # 언어 코드 ( Kor, Jpn, Eng, Chn )
-    url = "https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=" + lang
-    
-    #음성 데이터 넣기
-    data = open(filepath, 'rb')
-
     headers = {
         "X-NCP-APIGW-API-KEY-ID": client_id,
         "X-NCP-APIGW-API-KEY": client_secret,
         "Content-Type": "application/octet-stream"
     }
-    response = requests.post(url, data=data, headers=headers)
+    url = "https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Kor"
+    response = requests.post(url, data=voice_data, headers=headers)
     rescode = response.status_code
 
     if (rescode == 200):
