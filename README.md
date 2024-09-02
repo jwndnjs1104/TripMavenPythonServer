@@ -11,5 +11,5 @@ pip install --upgrade google-cloud-vision
 pip install openai
 
 실행법
-파이참 터미널에서 아래 코드 실행
+터미널에서 아래 코드 실행
 uvicorn app.main:app --port 8282 --reload
