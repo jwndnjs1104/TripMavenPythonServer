@@ -1,7 +1,7 @@
 ai api를 위한 fastapi 서버
 
-pip install fastapi
-pip install "uvicorn[standard]"
+pip install fastapi \n
+pip install "uvicorn[standard]" \n
 pip install SQLAlchemy cx_Oracle
 pip install selenium
 pip install --upgrade paho-mqtt
