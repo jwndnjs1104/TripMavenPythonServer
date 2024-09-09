@@ -85,11 +85,15 @@ from app.api import ocr
 from app.api import stt
 from app.api import verifyLicense
 from app.api import pronEvaluation
+from app.api import crawling
 
 # 라우터 등록
 # main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
 app.include_router(ocr.router, prefix="/ocr") #테스트용으로 해봤음
 app.include_router(stt.router, prefix="/stt") #테스트용으로 해봤음
+
+
+app.include_router(crawling.router, prefix="/newheadline") #테스트용으로 해봤음
 
 #큐넷 자격증 진위확인 서비스
 #폼데이터로 이미지를 보내면(key는 image로 설정해야 함) 이름이랑 관리번호 추출해서 셀레니움으로 처리
