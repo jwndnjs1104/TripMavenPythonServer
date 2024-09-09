@@ -12,12 +12,10 @@ def crawling():
     url = 'https://news.naver.com/main/list.naver?oid=052&listType=title'
     res = requests.get(url)
     source = res.text
-
     soup = BeautifulSoup(source, 'html.parser')
     selectors = soup.select(selector='#main_content > div.list_body.newsflash_body > ul:nth-child(2) > li > a')
     headlines = []
     for headline in selectors:
         headlines.append(headline.get_text())
-    print(headlines)
     return headlines
 
