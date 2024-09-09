@@ -19,6 +19,7 @@ pip install --upgrade google-cloud-vision
 pip install openai
 
 pip install bs4
+pip install Image
 
 실행법
 터미널에서 아래 코드 실행
