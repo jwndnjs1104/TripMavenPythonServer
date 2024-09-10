@@ -26,10 +26,6 @@ app.add_middleware(
 async def read_root():
     return {"message": "Hello World"}
 
-@app.get("/test")
-async def verify_license():
-    return {"result": "아 왜 안나와"}
-
 #db 연결 예시 코드
 '''
 @app.get("/users/{user_id}")
@@ -101,4 +97,4 @@ app.include_router(pronEvaluation.router, prefix="/pron")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8282)

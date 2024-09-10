@@ -153,3 +153,4 @@ class VerifyLicenseService:
             time.sleep(2)
             if driver:
                 driver.quit()
+
