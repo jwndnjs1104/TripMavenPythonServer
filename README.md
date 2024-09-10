@@ -18,6 +18,7 @@ pip install --upgrade google-cloud-vision
 
 pip install openai
 
+pip install bs4
 pip install Image
 
 실행법
