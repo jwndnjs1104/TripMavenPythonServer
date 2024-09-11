@@ -82,6 +82,7 @@ from app.api import stt
 from app.api import verifyLicense
 from app.api import pronEvaluation
 from app.api import crawling
+from app.api import voiceCheck
 
 # 라우터 등록
 # main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
@@ -95,9 +96,11 @@ app.include_router(crawling.router, prefix="/newheadline") #테스트용으로 �
 #폼데이터로 이미지를 보내면(key는 image로 설정해야 함) 이름이랑 관리번호 추출해서 셀레니움으로 처리
 app.include_router(verifyLicense.router, prefix="/license")
 
+#발음 평가 API
 app.include_router(pronEvaluation.router, prefix="/pron")
 
-
+#음성 분석 API
+app.include_router(voiceCheck.router, prefix="/voice/")
 
 if __name__ == "__main__":
     import uvicorn
