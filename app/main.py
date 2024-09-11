@@ -100,7 +100,7 @@ app.include_router(verifyLicense.router, prefix="/license")
 app.include_router(pronEvaluation.router, prefix="/pron")
 
 #음성 분석 API
-app.include_router(voiceCheck.router, prefix="/voice/")
+app.include_router(voiceCheck.router, prefix="/voice")
 
 if __name__ == "__main__":
     import uvicorn

@@ -2,18 +2,16 @@ import parselmouth
 import numpy as np
 import os
 
-
 # 음성 분석 클래스 입니다.
 class Sound_Check_Class:
 
     # 초기값으로 wav파일과 성별을 입력받습니다.
-    def __init__(self, file_like_object):
-        self.file_like_object = file_like_object
+    def __init__(self, filepath):
+        self.filepath = filepath
 
     # wav 데이터를 받고 waveform(파형)데이터로 변환하는 함수입니다.
     def load_wave(self):
-        # 파일 객체를 직접 parselmouth.Sound에 전달
-        waveform = parselmouth.Sound(self.file_like_object)
+        waveform = parselmouth.Sound(self.filepath)
         waveform = parselmouth.praat.call(waveform, "Convert to mono")
         return waveform
 
@@ -68,31 +66,3 @@ class Sound_Check_Class:
             pass
 
     # 메인 실행 함수 입니다.
-    def voice_run(self, sex):
-        waveform = self.load_wave()
-        pitch_analysis = self.extract_pitch(waveform)
-        interpolated = self.set_pitch_analysis(pitch_analysis)
-
-        voice_check_point = self.sound_model(interpolated, pitch_analysis, sex)
-
-        mean = int(round(np.nanmean(interpolated)))
-        std = int(round(np.nanstd(interpolated)))
-        x = pitch_analysis.xs()
-        x = np.round(x, 5)
-        x = x.tolist()
-        y = np.nan_to_num(interpolated)
-        y = y.tolist()
-
-        # 분석결과를 json 파일에 저장
-        voice_json = {
-            "voice": {
-                "x": x,
-                "y": y
-            },
-            "voice_mean": mean,
-
-            "voice_std": std,
-            "voice_check": voice_check_point
-        }
-
-        return voice_json
