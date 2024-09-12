@@ -8,10 +8,10 @@ openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/PronunciationKor" # 한국�
 accessKey = "79e5a1f4-d732-4baf-8d08-ed3fadbf88a3"
 
 class PronEvaluationService:
-    def evaluate(self, encoded_voice):
+    def evaluate(self, encoded_voice, text):
         try:
             languageCode = "korean"
-            script = "형제 중에서 맏이가 제일 힘든 것 같아요"
+            script = text
 
             requestJson = {
                 "argument": {
