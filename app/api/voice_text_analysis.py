@@ -1,50 +1,50 @@
 from fastapi import APIRouter, HTTPException, Form, UploadFile, File
 from app.services.voice_check_service import Sound_Check_Class
 from app.services.nlp_check_service import text_analysis
-import io, os, re
+import os, re
 import numpy as np
+import base64
 
 router = APIRouter()
 
-# 파일 저장 경로
+#파일 저장 경로
 SAVE_DIRECTORY = "uploaded_files/"
-
-# 디렉토리가 없으면 생성
+#디렉토리가 없으면 생성
 if not os.path.exists(SAVE_DIRECTORY):
     os.makedirs(SAVE_DIRECTORY)
 
 @router.post("/")
-async def combined_analysis(voice: UploadFile = File(None), gender: int = Form(...), text: str = Form(...)):
+async def combined_analysis(voice: UploadFile = File(...), gender: int = Form(...), text: str = Form(...)):
     try:
+        #응답데이터 저장 객체
         response = {}
 
-        # 음성 파일 분석
-        if voice:
-            # 파일 경로 지정
-            file_location = os.path.join(SAVE_DIRECTORY, voice.filename)
+        p = re.compile(r'[.,]')  # 쉼표와 온점만 제거
+        text = re.sub(p, '', text)
 
-            # 파일을 서버에 저장
+        #음성 분석(목소리톤)
+        if voice:
+            #파일 경로 지정
+            file_location = os.path.join(SAVE_DIRECTORY, voice.filename)
+            #파일을 서버에 저장
             with open(file_location, "wb") as buffer:
                 buffer.write(await voice.read())
 
-            # 메인 실행 함수
+            #목소리 톤 분석
             response["voice_analysis"] = voice_run(file_location, gender)
 
-        # 텍스트 파일 분석
+        # 텍스트 파일 분석(stt된 내용에 대한 평가, .? 비율, 워드클라우드용, 불필요한 추임새 )
+        if text:
+            response["text_analysis"] = text_analysis(text)
 
-        # if text:
-        #     p = re.compile(r'[ .,]') #쉼표, 온점 제거, 띄어쓰기 제거
-        #     text = re.sub(p, '', text)
-        #
-        #     response["text_analysis"] = text_analysis(text)
 
         if not voice and not text:
             raise HTTPException(status_code=400, detail="No file provided for analysis")
+
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Analysis failed: {str(e)}")
 
     return response
-
 
 #voice 분석 실행 함수
 def voice_run(filepath, sex):
