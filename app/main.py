@@ -82,7 +82,8 @@ from app.api import stt
 from app.api import verifyLicense
 from app.api import pronEvaluation
 from app.api import crawling
-from app.api import voiceCheck
+from app.api import voice_check
+from app.api import voice_text_analysis
 
 # 라우터 등록
 # main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
@@ -100,7 +101,11 @@ app.include_router(verifyLicense.router, prefix="/license")
 app.include_router(pronEvaluation.router, prefix="/pron")
 
 #음성 분석 API
-app.include_router(voiceCheck.router, prefix="/voice")
+#예시 사이트) https://velog.io/@dgk089/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EB%B0%9C%ED%91%9C%EC%9D%98-%EC%B0%B8%EA%B2%AC#2-%EC%8B%9C%EA%B0%84-%EC%A3%BC%ED%8C%8C%EC%88%98
+#voice파일(.wav), gender(폼 데이터), text(폼 데이터)
+app.include_router(voice_text_analysis.router, prefix="/voice")
+
+
 
 if __name__ == "__main__":
     import uvicorn

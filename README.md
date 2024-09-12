@@ -22,7 +22,15 @@ pip install bs4
 
 pip install Image
 
-pip install praat-parselmouth
+pip install praat-parselmouth\
+
+pip install opencv-python
+
+pip install mediapipe
+
+pip install keras
+
+pip install konlpyf
 
 실행법
 터미널에서 아래 코드 실행

@@ -33,30 +33,31 @@ class Sound_Check_Class:
         std = int(round(np.nanstd(interpolated)))
 
         # 평균(mean)과, 표준편차(std) 분석하는 코드입니다.
-        if int(sex) == 0:
+        if int(sex) == 0:  # 남자
             if std < 20:
-                return 1
+                return '너무 단조롭습니다(Bad)'
 
             elif std >= 20 and std < 30:
-                return 2
+                return '적정합니다(Good)'
 
             elif std >= 30 and std <= 55:
-                return 3
+                return '알아듣기 쉬워 이해하기 좋습니다(Perfect)'
 
             elif std > 55:
-                return 4
+                return '너무 산만하거나 긴장중이네요(Bad)'
 
-        elif int(sex) == 1:
+        elif int(sex) == 1:  # 여자
             if std < 45:
-                return 1
+                return '너무 단조롭습니다(Bad)'
 
             elif std >= 45 and std < 55:
-                return 2
+                return '적정합니다(Good)'
 
             elif std >= 55 and std <= 70:
-                return 3
+                return '알아듣기 쉬워 이해하기 좋습니다(Perfect)'
+
             elif std > 70:
-                return 4
+                return '너무 산만하거나 긴장중이네요(Bad)'
 
     # 파일삭제 함수입니다.
     def del_file(self, path):
