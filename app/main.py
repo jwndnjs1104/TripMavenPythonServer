@@ -83,12 +83,14 @@ from app.api import verifyLicense
 from app.api import pronEvaluation
 from app.api import crawling
 from app.api import voiceCheck
+from app.api import face
 
 # 라우터 등록
 # main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
 app.include_router(ocr.router, prefix="/ocr") #테스트용으로 해봤음
 app.include_router(stt.router, prefix="/stt") #테스트용으로 해봤음
 
+app.include_router(face.router, prefix="/face") #테스트용으로 해봤음
 
 app.include_router(crawling.router, prefix="/newheadline") #테스트용으로 해봤음
 
