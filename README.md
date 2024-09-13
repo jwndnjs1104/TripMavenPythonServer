@@ -32,6 +32,9 @@ pip install keras
 
 pip install konlpyf
 
+pip install ffmpeg-python
+
+
 실행법
 터미널에서 아래 코드 실행
 uvicorn app.main:app --port 8282 --reload
