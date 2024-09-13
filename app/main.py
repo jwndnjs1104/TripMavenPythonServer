@@ -84,6 +84,7 @@ from app.api import pronEvaluation
 from app.api import crawling
 from app.api import voice_check
 from app.api import voice_text_analysis
+from app.api import face
 
 # 라우터 등록
 # main.py에서 기본 라우팅 하는게 아니라 api패키지에 있는 각 파일에서 APIRouter객체를 이용해 라우팅하고 main에서 라우터 등록
@@ -101,7 +102,9 @@ app.include_router(verifyLicense.router, prefix="/license")
 app.include_router(pronEvaluation.router, prefix="/pron")
 
 #음성 분석 API
-app.include_router(voiceCheck.router, prefix="/voice")
+app.include_router(voice_check.router, prefix="/voice")
+#표정 분석 API
+app.include_router(face.router, prefix="/face")
 
 if __name__ == "__main__":
     import uvicorn
