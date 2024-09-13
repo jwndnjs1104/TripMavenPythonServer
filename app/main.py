@@ -82,7 +82,6 @@ from app.api import stt
 from app.api import verifyLicense
 from app.api import pronEvaluation
 from app.api import crawling
-from app.api import voice_check
 from app.api import voice_text_analysis
 
 # 라우터 등록
@@ -101,7 +100,7 @@ app.include_router(verifyLicense.router, prefix="/license")
 app.include_router(pronEvaluation.router, prefix="/pron")
 
 #음성 분석 API
-app.include_router(voiceCheck.router, prefix="/voice")
+app.include_router(voice_text_analysis.router, prefix="/voice")
 
 if __name__ == "__main__":
     import uvicorn
