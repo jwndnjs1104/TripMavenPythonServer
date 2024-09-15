@@ -82,7 +82,6 @@ from app.api import stt
 from app.api import verifyLicense
 from app.api import pronEvaluation
 from app.api import crawling
-from app.api import voice_check
 from app.api import voice_text_analysis
 from app.api import face
 
