@@ -1,10 +1,7 @@
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, HTTPException, Form, File, UploadFile
 from sqlalchemy.orm import Session
-from app.models.users import Users
 from app.db.session import get_db
-import base64
 
 app = FastAPI()
 
@@ -101,10 +98,10 @@ app.include_router(verifyLicense.router, prefix="/license")
 app.include_router(pronEvaluation.router, prefix="/pron")
 
 #음성 분석 API
-app.include_router(voice_text_analysis.router, prefix="/voice")
+app.include_router(voice_text_analysis.router, prefix="/analysis")
 #표정 분석 API
 app.include_router(face.router, prefix="/face")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8282)
+    uvicorn.run(app, host="localhost", port=8282)
