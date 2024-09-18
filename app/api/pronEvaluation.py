@@ -7,12 +7,12 @@ router = APIRouter()
 pron_evaluation_service = PronEvaluationService()
 
 @router.post("/")
-async def pron_evaluation(voice: UploadFile, text: str = Form(...)):
+async def pron_evaluation(voice: UploadFile = File(...), text: str = Form(...)):
     try:
         #webm에서 오디오 추출
-        #audio_data = await extract_audio_from_webm(voice)
+        # audio_data = await extract_audio_from_webm(voice)
         #Base64로 인코딩
-        #encoded_voice = base64.b64encode(audio_data).decode('utf-8')
+        # encoded_voice = base64.b64encode(audio_data).decode('utf-8')
 
         #음성 파일 읽기
         voice_data = await voice.read()

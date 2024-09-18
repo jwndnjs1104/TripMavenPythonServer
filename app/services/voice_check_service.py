@@ -7,7 +7,8 @@ class Sound_Check_Class:
 
     # 초기값으로 wav파일과 성별을 입력받습니다.
     def __init__(self, filepath):
-        self.filepath = filepath
+        file_location = os.path.abspath(os.path.join(filepath))
+        self.filepath = file_location
 
     # wav 데이터를 받고 waveform(파형)데이터로 변환하는 함수입니다.
     def load_wave(self):
