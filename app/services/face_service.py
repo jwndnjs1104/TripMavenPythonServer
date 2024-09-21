@@ -67,7 +67,7 @@ class EyeCheck:
         ]
 
         # 모델을 파일에서 불러옴
-        model_path = r'D:\.LGR\Proj\PythonServer\app\models\face\eye_model.h5'
+        model_path = r'D:\JJW\Workspace\pythonServer\pythonServer\app\models\face\eye_model.h5'
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file not found at {model_path}")
 
@@ -315,6 +315,7 @@ def process_video(file_contents: bytes) -> Dict:
 
     try:
         eye_check = EyeCheck()  # EyeCheck 객체 생성
+        print('eye_check 객체 생성:',eye_check)
         result = eye_check.face_run(temp_file_path)  # 비디오 파일 처리
     finally:
         # 파일이 존재하는지 확인하고 삭제

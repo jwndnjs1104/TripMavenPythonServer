@@ -14,6 +14,7 @@ def filler_words_check(txt):
 
 # 어미 분석
 def word_end_check(txt):
+
     kkma = Kkma()
     pos = kkma.pos(txt)
     count = Counter(pos)
@@ -33,8 +34,13 @@ def get_nouns_list(txt):
 # 메인 실행 함수 (텍스트 분석)
 def text_analysis(text):
     filler_words = filler_words_check(text) #불필요한 추임새
+    print('filler_words_check')
+
     speak_end = word_end_check(text) #어미 분석(?!.)
+    print('word_end_check')
+
     word_list = get_nouns_list(text) #워드 클라우드용(단어집합)
+    print('get_nouns_list')
 
     text_json = {
         "fillerwords": filler_words,
