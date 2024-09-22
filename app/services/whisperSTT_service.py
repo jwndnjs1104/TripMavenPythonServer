@@ -75,7 +75,7 @@ class WhisperVoiceEvaluation:
         print(f"분당 말하기 속도(WPM): {speaking_speed_per_min:.2f} 단어/분")
         print(f"총 음소 수: {phoneme_count}")
         print(f"초당 음소량: {phonemes_per_second:.2f} 음소/초")
-        print(f"분당 음소량: {phonemes_per_min:.2f} 음소/초")
+        print(f"분당 음소량: {phonemes_per_min:.2f} 음소/분")
 
         result = {
             'total_spoken_time':total_spoken_time,
