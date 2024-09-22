@@ -9,6 +9,8 @@ import tensorflow as tf  # 머신러닝 모델 실행
 import matplotlib.pyplot as plt  # 그래프 시각화를 위한 라이브러리
 import base64  # 이미지 데이터를 인코딩하기 위한 라이브러리
 from io import BytesIO  # 이미지 데이터를 메모리 버퍼에 저장하기 위한 라이브러리
+import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
 
 # 표정 분석 결과에 따라 코멘트를 생성하는 함수

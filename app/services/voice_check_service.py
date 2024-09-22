@@ -7,12 +7,16 @@ class Sound_Check_Class:
 
     # 초기값으로 wav파일과 성별을 입력받습니다.
     def __init__(self, filepath):
-        self.filepath = filepath
+        file_location = os.path.abspath(os.path.join(filepath))
+        print('생성자 안:',file_location)
+        self.filepath = file_location
 
     # wav 데이터를 받고 waveform(파형)데이터로 변환하는 함수입니다.
     def load_wave(self):
         waveform = parselmouth.Sound(self.filepath)
+        print('웨이브폼1')
         waveform = parselmouth.praat.call(waveform, "Convert to mono")
+        print('웨이브폼2')
         return waveform
 
     # pitch의 max값과 min 값을 설정하는 함수입니다.
