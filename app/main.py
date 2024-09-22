@@ -102,6 +102,7 @@ app.include_router(voice_text_analysis.router, prefix="/analysis")
 #표정 분석 API
 app.include_router(face.router, prefix="/face")
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="localhost", port=8282)

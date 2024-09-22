@@ -52,17 +52,3 @@ async def upload_video(file: UploadFile = File(...)) -> Dict:
         os.remove(mp4_temp_file_path)
 
     return result
-
-
-
-
-
-    # 이전
-
-    # print('file:: ', file)
-    # # 동영상 파일을 읽어옴
-    # file_contents = await file.read()
-    # # 비디오를 처리하는 함수 호출
-    # result = process_video(file_contents)
-    # # 결과 반환 (JSON 형식)
-    # return result

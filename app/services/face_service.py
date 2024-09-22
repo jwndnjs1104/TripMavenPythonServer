@@ -10,6 +10,59 @@ import matplotlib.pyplot as plt  # 그래프 시각화를 위한 라이브러리
 import base64  # 이미지 데이터를 인코딩하기 위한 라이브러리
 from io import BytesIO  # 이미지 데이터를 메모리 버퍼에 저장하기 위한 라이브러리
 
+
+# 표정 분석 결과에 따라 코멘트를 생성하는 함수
+def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasolabial_folds_score):
+    comments = []
+
+    if mouth_score > 70:
+        comments.append("입 움직임이 크며 매우 활발하게 말하고 있는 것으로 보입니다.")
+    elif mouth_score < 30:
+        comments.append("입 움직임이 적으며 조용히 말하고 있는 것으로 보입니다.")
+
+    if cheekbones_score > 70:
+        comments.append("광대뼈 움직임이 커서 웃거나 매우 긍정적인 표정이 많이 보입니다.")
+    elif cheekbones_score < 30:
+        comments.append("광대뼈 움직임이 적어 미소가 거의 없습니다.")
+
+    if brow_score > 70:
+        comments.append("눈썹 움직임이 크며, 놀람이나 긴장된 상태일 수 있습니다.")
+    elif brow_score < 30:
+        comments.append("눈썹 움직임이 적어 감정 변화가 크게 드러나지 않습니다.")
+
+    if nasolabial_folds_score > 70:
+        comments.append("팔자주름이 많이 나타나며, 감정 표현이 잘 드러나고 있습니다.")
+    elif nasolabial_folds_score < 30:
+        comments.append("팔자주름이 거의 나타나지 않아 감정 표현이 적어 보입니다.")
+
+        # 종합적으로 감정 및 상태에 대한 평가
+    if mouth_score > 70 and cheekbones_score > 70:
+        comments.append("전반적으로 긍정적이고 활발한 상태로 보입니다.")
+    elif brow_score > 70 or nasolabial_folds_score > 70:
+        comments.append("긴장한 상태일 수 있으며, 감정적으로 불안해 보일 수 있습니다.")
+
+        # 코멘트를 '*'로 구분된 문자열로 반환
+    return '*'.join(comments)
+
+
+# 눈 깜박임 횟수에 따른 코멘트를 생성하는 함수
+def generate_eye_blink_comment(total_blinks, duration_minutes=1):
+    # 이상적인 눈 깜박임 횟수 범위를 설정 (일반적으로 1분에 15~20회)
+    ideal_blinks_per_minute = (15, 20)
+
+    comments = []  # 여러 개의 코멘트를 리스트로 저장
+
+    if total_blinks < ideal_blinks_per_minute[0]:
+        comments.append(f"눈 깜박임 횟수가 {total_blinks}회로, 평균보다 적어 긴장된 상태일 수 있습니다. 1분에 15회에서 20회 깜빡이는 것이 적당합니다.")
+    elif total_blinks > ideal_blinks_per_minute[1]:
+        comments.append(f"눈 깜박임 횟수가 {total_blinks}회로, 평균보다 많아 피곤하거나 매우 불안한 상태일 수 있습니다. 1분에 15회에서 20회 깜빡이는 것이 적당합니다.")
+    else:
+        comments.append(f"눈 깜박임 횟수가 {total_blinks}회로, 적정 범위 내에 있으며 안정적인 상태입니다.")
+
+    # 코멘트를 '*'로 구분된 문자열로 반환
+    return '*'.join(comments)
+
+
 # 선 그래프를 그린 후 base64 형식으로 인코딩하여 반환하는 함수
 def plot_line_graph(x, y, title, x_label, y_label):
     plt.figure()
@@ -193,12 +246,12 @@ class EyeCheck:
 
             if not ret:  # 비디오 끝에 도달하면 루프 종료
                 print("End frame")
-                eye_list.append(int(eye_cnt / 2))  # 깜박임 수를 추가
+                eye_list.append(eye_cnt / 2)  # 깜박임 수를 추가
                 break
 
             frame += 1
             if frame % m_fps == 0:
-                eye_list.append(int(eye_cnt / 2))
+                eye_list.append(eye_cnt / 2)
                 eye_cnt = 0
                 frame = 0
 
@@ -209,7 +262,7 @@ class EyeCheck:
             image.flags.writeable = True  # 이미지를 다시 쓰기 가능 상태로 변경
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)  # 이미지를 다시 BGR로 변환
 
-            eye_image = image.copy()  # 눈 부분 이미지를 복사
+            #eye_image = image.copy()  # 눈 부분 이미지를 복사
 
             if results.multi_face_landmarks:  # 얼굴 랜드마크가 있으면 처리
                 idx_to_coordinates = check.landmark_dict(results, width, height)  # 랜드마크 좌표 추출
@@ -240,18 +293,27 @@ class EyeCheck:
                 Nasolabial_Folds_list.append(Nasolabial_Folds_res)
 
             if cv2.waitKey(1) == ord('q'):  # 'q' 키를 누르면 루프 종료
-                eye_list.append(int(eye_cnt / 2))
+                eye_list.append(eye_cnt / 2)
                 break
 
         face_mesh.close()  # Mediapipe face mesh 종료
         cap.release()  # 비디오 캡처 해제
         cv2.destroyAllWindows()  # 모든 OpenCV 윈도우 닫기
 
+        # 표정 분석 코멘트를 생성하여 문자열로 반환
+        expression_comment = generate_expression_comment(
+            mouth_list[-1] if mouth_list else 0,
+            cheekbones_list[-1] if cheekbones_list else 0,
+            brow_list[-1] if brow_list else 0,
+            Nasolabial_Folds_list[-1] if Nasolabial_Folds_list else 0
+        )
+
         # 얼굴 변화 데이터를 JSON 형식으로 반환
         face_json = {
             'eye': {
-                'x': len(eye_list),
-                'y': eye_list
+                'total_blinks': sum(eye_list),  # 눈 깜박임 횟수의 총합을 반환
+                'average_blinks': sum(eye_list) / len(eye_list) if eye_list else 0,  # 평균 깜박임 횟수 반환
+                'comment': generate_eye_blink_comment(sum(eye_list))
             },
             'face': {
                 'mouth': {
@@ -271,12 +333,9 @@ class EyeCheck:
                     'y': Nasolabial_Folds_list
                 },
                 'm_fps': m_fps
-            }
+            },
+             'expression_comment': expression_comment  # 표정 분석 코멘트는 문자열로 반환
         }
-
-        # 눈 깜박임 횟수를 막대그래프로 시각화
-        eye_bar_graph = plot_bar_graph(list(range(len(face_json['eye']['y']))), face_json['eye']['y'], 'Eye Blinking Over Time',
-                                       'Time', 'Blink Count')
 
         # 얼굴 변화 데이터를 선 그래프로 시각화
         mouth_graph = plot_line_graph(list(range(len(face_json['face']['mouth']['y']))), face_json['face']['mouth']['y'],
@@ -292,7 +351,6 @@ class EyeCheck:
 
         # 그래프 데이터를 JSON에 포함
         face_json['graphs'] = {
-            'eye_bar_graph': eye_bar_graph,
             'mouth_graph': mouth_graph,
             'cheekbones_graph': cheekbones_graph,
             'brow_graph': brow_graph,
