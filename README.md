@@ -34,7 +34,7 @@ pip install konlpy
 
 pip install ffmpeg-python
 
-
+pip install kiwipiepy
 
 Whisper 설치
 pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git

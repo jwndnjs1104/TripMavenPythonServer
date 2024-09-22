@@ -47,7 +47,7 @@ async def combined_analysis(voice: UploadFile = File(...), gender: int = Form(..
         print('디버그4:',converted_file_location)
         convert_webm_to_wav(file_location,converted_file_location)
 
-        check_wav_file(converted_file_location)
+        #check_wav_file(converted_file_location)
         #x, sr = librosa.load(file_location)
         #print(f'디버깅, x:{x}, sr:{sr}')
 

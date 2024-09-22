@@ -1,5 +1,6 @@
 from collections import Counter
 from konlpy.tag import Kkma, Okt
+from kiwipiepy import Kiwi
 import re
 
 # 불필요한 추임새 분석
@@ -22,14 +23,31 @@ def word_end_check(txt):
     word_b = sum(count[i] for i in count if i[1] in ('EFN', 'EFR'))  # 평서, 존칭형
     rate1 = word_a / (word_a + word_b) * 100  # 참여유도형 비율
     rate2 = word_b / (word_a + word_b) * 100  # 공식적인 화법 비율
-    return {'formal_speak': round(rate2, 2), 'question_speak': round(rate1, 2)}
+    return {'formal_speak': int(rate2), 'question_speak': int(rate1)}
 
 # 명사 리스트 추출 (워드 클라우드 생성용)
 def get_nouns_list(txt):
-    okt = Okt()
-    nouns = okt.nouns(txt)
-    nouns_count = Counter(nouns).most_common()
-    return [{'text': n[0], 'weight': n[1]} for n in nouns_count]
+    # print('원래 문장:',txt)
+    # okt = Okt()
+    # nouns = okt.nouns(txt)
+    # nouns_count = Counter(nouns).most_common()
+    # return [{'text': n[0], 'weight': n[1]} for n in nouns_count]
+
+
+    # word_extractor = WordExtractor()
+    # words = word_extractor.train_extract([txt])  # 단어 추출
+    # scores = {word: score.cohesion_forward for word, score in words.items()}
+    # tokenizer = LTokenizer(scores=scores)
+    #
+    # tokens = tokenizer.tokenize(txt)
+    # words_count = Counter(tokens).most_common()
+    # return [{'text': w[0], 'weight': w[1]} for w in words_count]
+    print('kiwi')
+    kiwi = Kiwi()
+    result = kiwi.analyze(txt)
+    words = [token.form for token in result[0][0] if token.tag.startswith('N')]  # 명사만 추출
+    words_count = Counter(words).most_common()
+    return [{'text': w[0], 'weight': w[1]} for w in words_count]
 
 # 메인 실행 함수 (텍스트 분석)
 def text_analysis(text):
