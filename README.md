@@ -36,6 +36,8 @@ pip install ffmpeg-python
 
 pip install kiwipiepy
 
+pip install moviepy imageio-ffmpeg
+
 Whisper 설치
 pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
 

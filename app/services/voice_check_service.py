@@ -33,7 +33,7 @@ class Sound_Check_Class:
         return interpolated
 
     # np.array 타입의 interpolated 와 sex 받아 음성 분석을 하는 함수입니다.
-    def sound_model(self, interpolated, pitch_analysis, sex):
+    def sound_model(self, interpolated, sex):
         std = int(round(np.nanstd(interpolated)))
 
         # 평균(mean)과, 표준편차(std) 분석하는 코드입니다.

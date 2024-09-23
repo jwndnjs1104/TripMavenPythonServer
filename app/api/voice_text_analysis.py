@@ -1,20 +1,31 @@
 from fastapi import APIRouter, HTTPException, Form, UploadFile, File
+from fastapi.responses import FileResponse
 from app.services.voice_check_service import Sound_Check_Class
 from app.services.nlp_check_service import text_analysis
-import os, re
-import numpy as np
-import wave
-from pydub import AudioSegment
 from app.services.whisperSTT_service import WhisperVoiceEvaluation
+import os, re, uuid, wave
+import numpy as np
+from pydub import AudioSegment
+from moviepy.editor import VideoFileClip
 
 router = APIRouter()
 whisperModel = WhisperVoiceEvaluation()
 
 #파일 저장 경로
 SAVE_DIRECTORY = r'D:\JJW\Workspace\pythonServer\pythonServer\uploaded_files'
-#디렉토리가 없으면 생성
-if not os.path.exists(SAVE_DIRECTORY):
-    os.makedirs(SAVE_DIRECTORY)
+os.makedirs(SAVE_DIRECTORY, exist_ok=True)
+
+# moviepy를 사용하여 비디오에서 오디오 추출하는 함수
+def extract_audio(video_file_path: str, output_audio_file_path: str):
+    try:
+        print('비디오 추출함수 진입')
+        video = VideoFileClip(video_file_path)
+        print('비디오 생성')
+        video.audio.write_audiofile(output_audio_file_path)
+        video.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"오디오 추출 실패: {e}")
+
 
 def check_wav_file(file_path):
     try:
@@ -35,35 +46,54 @@ async def combined_analysis(voice: UploadFile = File(...), gender: int = Form(..
         p = re.compile(r'[.,]')  # 쉼표와 온점만 제거
         text = re.sub(p, '', text)
 
-        #음성 분석(목소리톤)
-        #파일 경로 지정
+        # 파일 경로 지정
         file_location = os.path.join(SAVE_DIRECTORY, voice.filename)
-        print('디버그3:',file_location)
-        #파일을 서버에 저장
+        print('디버그3:', file_location)
+        # 파일을 서버에 저장
         with open(file_location, "wb") as buffer:
             buffer.write(await voice.read())
-        #webm 파일을 wav 파일로 변경
-        converted_file_location = os.path.join(SAVE_DIRECTORY, 'converted_audio.wav')
-        print('디버그4:',converted_file_location)
-        convert_webm_to_wav(file_location,converted_file_location)
 
-        #check_wav_file(converted_file_location)
-        #x, sr = librosa.load(file_location)
-        #print(f'디버깅, x:{x}, sr:{sr}')
+        # 영상파일 받았을때 추출할 음성파일 경로 만들기
+        extracted_file_location = os.path.join(SAVE_DIRECTORY, 'extracted_audio.webm')
+        print('디버그4:', extracted_file_location)
+
+        # webm 파일을 wav 파일로 변경하기 위해서 wav 파일 경로 만들기
+        converted_file_location = os.path.join(SAVE_DIRECTORY, 'converted_audio.wav')
+        print('디버그5:', converted_file_location)
+        convert_webm_to_wav(file_location, converted_file_location)  # webm 오디오에서 wav로 변환
+
+        #영상 테스트시 추출한 오디오 파일(webm)
+        # if isVoiceTest == '0':
+        #     print('모의 테스트시')
+        #     extract_audio(file_location, extracted_file_location) #영상에서 오디오 추출(webm 오디오 파일일 것같음)
+        #     convert_webm_to_wav(extracted_file_location, converted_file_location) #webm 오디오에서 wav로 변환
+        # else:
+        #     print('발음 테스트시')
+        #     if voice.filename.endswith('.webm'):
+        #         print('webm파일인 경우')
+        #         convert_webm_to_wav(file_location, converted_file_location)
+        #     else:
+        #         converted_file_location=file_location
+        # print('최종 파일 경로:',converted_file_location)
 
         # 텍스트 파일 분석(stt된 내용에 대한 평가, .? 비율, 워드클라우드용, 불필요한 추임새 )
         # 발음 테스트의 경우 아래 결과는 무의미하다 판단해서 제외했음
         response["text_analysis"] = ""
         if isVoiceTest == '0':
             response["text_analysis"] = text_analysis(text)
-        print('디버그5')
-
-        # 목소리 톤 분석(발음 테스트시 이것만 반환됨)
-        response["voice_tone"] = voice_run(converted_file_location, gender)
         print('디버그6')
 
-        # 말하기 속도 및 발음 정확도 측정
+        # 목소리 톤 분석(발음 테스트시 이것만 반환됨)(wav)
+        response["voice_tone"] = voice_run(converted_file_location, gender)
+        print('디버그7')
+
+        # 말하기 속도 및 발음 정확도 측정(webm)
+        # if isVoiceTest == '0':
+        #     result = whisperModel.evaluate(extracted_file_location, text)
+        # else:
+        #     result = whisperModel.evaluate(file_location, text)
         result = whisperModel.evaluate(file_location, text)
+
         if result:  # None이 아닌지 확인
             response["speed_result"] = result.get('speed_result', {})
             response["pronunciation_precision"] = result.get('pronunciation_precision', {})
@@ -89,7 +119,7 @@ def voice_run(filepath, sex):
     interpolated = sound.set_pitch_analysis(pitch_analysis)
     print('디버그9')
 
-    voice_check_point = sound.sound_model(interpolated, pitch_analysis, sex)
+    voice_check_point = sound.sound_model(interpolated, sex)
     print('디버그10')
     mean = int(round(np.nanmean(interpolated)))
     std = int(round(np.nanstd(interpolated)))

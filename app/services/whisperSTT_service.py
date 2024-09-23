@@ -22,6 +22,8 @@ class WhisperVoiceEvaluation:
     def calculate_pronunciation_accuracy(self, avg_logprob_score, cer):
         # Log probability를 0-1 범위로 정규화
         # 일반적으로 Whisper의 log probability는 -1 ~ 0 범위
+        if(avg_logprob_score<-1):
+            avg_logprob_score=-1
         normalized_logprob = 1 + avg_logprob_score
 
         # CER을 0-1 범위로 변환 (0이 가장 좋고, 1이 가장 나쁨)
@@ -136,30 +138,9 @@ class WhisperVoiceEvaluation:
         return pronunciation_precision
 
     def evaluate(self, file_location, reference_text):
-        #예제
-        # 오디오를 30초 길이에 맞게 패딩하거나 자릅니다
-        # audio = whisper.load_audio(file_location)
-        # audio = whisper.pad_or_trim(audio)
-
-        # 오디오의 로그 멜 스펙트로그램을 생성하고 모델이 있는 같은 디바이스로 이동합니다
-        # mel = whisper.log_mel_spectrogram(audio).to(model.device)
-
-        # detect_language() 메소드를 사용하여 말해진 언어를 감지합니다
-        # _, probs = model.detect_language(mel)
-        # 감지된 언어를 출력합니다
-        # print(f"Detected language: {max(probs, key=probs.get)}")
-
-        # 디코딩 옵션을 설정합니다
-        # options = whisper.DecodingOptions()
-        # decode() 메소드를 사용하여 오디오를 텍스트로 디코딩합니다
-        # result = whisper.decode(model, mel, options)
-
-        # print the recognized text
-        # print(result.text)
-
         try:
             print('음성 평가 함수 들어옴')
-            STTresult =self.model.transcribe(file_location, fp16=False)
+            STTresult =self.model.transcribe(file_location, fp16=False, language="ko")
             print(STTresult)
 
             #테스트
