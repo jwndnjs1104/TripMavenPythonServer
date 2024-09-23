@@ -122,7 +122,7 @@ class EyeCheck:
         ]
 
         # 모델을 파일에서 불러옴
-        model_path = r'D:\JJW\Workspace\pythonServer\pythonServer\app\models\face\eye_model.h5'
+        model_path = r'D:\.LGR\Proj\PythonServer\app\models\face\eye_model.h5'
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file not found at {model_path}")
 
