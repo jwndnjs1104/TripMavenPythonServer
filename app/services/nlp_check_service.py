@@ -42,7 +42,6 @@ def get_nouns_list(txt):
     # tokens = tokenizer.tokenize(txt)
     # words_count = Counter(tokens).most_common()
     # return [{'text': w[0], 'weight': w[1]} for w in words_count]
-    print('kiwi')
     kiwi = Kiwi()
     result = kiwi.analyze(txt)
     words = [token.form for token in result[0][0] if token.tag.startswith('N')]  # 명사만 추출

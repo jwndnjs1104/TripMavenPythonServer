@@ -11,7 +11,7 @@ router = APIRouter()
 whisperModel = WhisperVoiceEvaluation()
 
 #파일 저장 경로
-SAVE_DIRECTORY = r'D:\.LGR\Proj\PythonServer\app\uploaded_files'
+SAVE_DIRECTORY = r'D:\JJW\Workspace\pythonServer\pythonServer\uploaded_files'
 #디렉토리가 없으면 생성
 if not os.path.exists(SAVE_DIRECTORY):
     os.makedirs(SAVE_DIRECTORY)
