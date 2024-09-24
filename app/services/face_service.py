@@ -40,7 +40,7 @@ def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasol
         # 종합적으로 감정 및 상태에 대한 평가
     if mouth_score > 70 and cheekbones_score > 70:
         comments.append("전반적으로 긍정적이고 활발한 상태로 보입니다.")
-    elif brow_score > 70 or nasolabial_folds_score > 70:
+    if brow_score > 70 or nasolabial_folds_score > 70:
         comments.append("긴장한 상태일 수 있으며, 감정적으로 불안해 보일 수 있습니다.")
 
         # 코멘트를 '*'로 구분된 문자열로 반환
