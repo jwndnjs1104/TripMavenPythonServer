@@ -17,31 +17,69 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasolabial_folds_score):
     comments = []
 
-    if mouth_score > 70:
-        comments.append("입 움직임이 크며 매우 활발하게 말하고 있는 것으로 보입니다.")
-    elif mouth_score < 30:
-        comments.append("입 움직임이 적으며 조용히 말하고 있는 것으로 보입니다.")
+    # 입 움직임에 따른 코멘트
+    if mouth_score <= 25:
+        comments.append("입 움직임이 거의 없으며, 말할 때 조용하고 감정 표현이 적습니다.")
+        comments.append("입술의 움직임이 거의 없기 때문에 비언어적인 표현도 감소하는 것으로 보입니다.")
+    elif 25 < mouth_score <= 50:
+        comments.append("입 움직임이 다소 적어 말이 조용하고 차분한 편입니다.")
+        comments.append("자신감이 부족하거나, 차분한 태도를 유지하려는 경향일 수 있습니다.")
+    elif 50 < mouth_score <= 75:
+        comments.append("입 움직임이 적당하며, 일반적인 대화 중에 감정 표현이 잘 드러납니다.")
+        comments.append("말하는 동안 적절한 비언어적 표현이 이루어지고 있습니다.")
+    else:
+        comments.append("입 움직임이 크며, 매우 활발하게 말하고 있는 것으로 보입니다.")
+        comments.append("자신감이 높으며 적극적으로 의사소통을 하고 있습니다.")
 
-    if cheekbones_score > 70:
-        comments.append("광대뼈 움직임이 커서 웃거나 매우 긍정적인 표정이 많이 보입니다.")
-    elif cheekbones_score < 30:
-        comments.append("광대뼈 움직임이 적어 미소가 거의 없습니다.")
+    # 광대뼈 움직임에 따른 코멘트
+    if cheekbones_score <= 25:
+        comments.append("광대뼈 움직임이 거의 없으며, 미소가 적거나 무표정 상태일 가능성이 큽니다.")
+        comments.append("감정적인 반응이 거의 드러나지 않아 다소 딱딱한 인상을 줄 수 있습니다.")
+    elif 25 < cheekbones_score <= 50:
+        comments.append("광대뼈 움직임이 다소 적어, 미소가 드문 편입니다.")
+        comments.append("미소가 억제되었거나, 상황에 따라 미묘하게 표현된 것일 수 있습니다.")
+    elif 50 < cheekbones_score <= 75:
+        comments.append("광대뼈 움직임이 적당하며, 미소가 자연스럽게 나타납니다.")
+        comments.append("긍정적인 감정이 적절히 드러나며 친근한 인상을 줍니다.")
+    else:
+        comments.append("광대뼈 움직임이 커서 웃음이 많고 긍정적인 표정이 두드러집니다.")
+        comments.append("웃음이 크고 자연스러워, 매우 즐거운 상태를 보여줍니다.")
 
-    if brow_score > 70:
-        comments.append("눈썹 움직임이 크며, 놀람이나 긴장된 상태일 수 있습니다.")
-    elif brow_score < 30:
-        comments.append("눈썹 움직임이 적어 감정 변화가 크게 드러나지 않습니다.")
+    # 눈썹 움직임에 따른 코멘트
+    if brow_score <= 25:
+        comments.append("눈썹 움직임이 거의 없어, 감정 표현이 잘 드러나지 않습니다.")
+        comments.append("얼굴 전반에 감정 변화가 거의 없어 침착해 보입니다.")
+    elif 25 < brow_score <= 50:
+        comments.append("눈썹 움직임이 적어, 감정 변화가 미미하게 나타납니다.")
+        comments.append("눈썹의 약간의 움직임은 감정을 미묘하게 드러내고 있습니다.")
+    elif 50 < brow_score <= 75:
+        comments.append("눈썹 움직임이 적당하며, 감정 표현이 자연스럽습니다.")
+        comments.append("눈썹을 통한 감정 표현이 상황에 적절하게 이루어집니다.")
+    else:
+        comments.append("눈썹 움직임이 크며, 놀라거나 긴장된 상태를 보여줍니다.")
+        comments.append("감정이 강하게 드러나며, 순간적인 반응이 뚜렷합니다.")
 
-    if nasolabial_folds_score > 70:
-        comments.append("팔자주름이 많이 나타나며, 감정 표현이 잘 드러나고 있습니다.")
-    elif nasolabial_folds_score < 30:
-        comments.append("팔자주름이 거의 나타나지 않아 감정 표현이 적어 보입니다.")
+    # 팔자주름 변화에 따른 코멘트
+    if nasolabial_folds_score <= 25:
+        comments.append("팔자주름이 거의 나타나지 않아 감정 표현이 적거나 차분한 상태입니다.")
+        comments.append("미소나 감정 표현이 최소한으로 유지된 듯 보입니다.")
+    elif 25 < nasolabial_folds_score <= 50:
+        comments.append("팔자주름이 다소 나타나며, 감정 표현이 부분적으로 보입니다.")
+        comments.append("감정 표현이 제한적이지만, 소소한 감정 변화를 반영하고 있습니다.")
+    elif 50 < nasolabial_folds_score <= 75:
+        comments.append("팔자주름이 적당히 나타나며, 감정 표현이 잘 드러납니다.")
+        comments.append("긍정적인 감정이나 즐거움이 비교적 자연스럽게 표현되고 있습니다.")
+    else:
+        comments.append("팔자주름이 많이 나타나며, 감정 표현이 매우 강하게 드러납니다.")
+        comments.append("웃음이나 감정 표현이 강하며 매우 생동감 있는 표정입니다.")
 
-        # 종합적으로 감정 및 상태에 대한 평가
-    if mouth_score > 70 and cheekbones_score > 70:
-        comments.append("전반적으로 긍정적이고 활발한 상태로 보입니다.")
-    if brow_score > 70 or nasolabial_folds_score > 70:
+    # 종합적인 상태 평가
+    if mouth_score > 75 and cheekbones_score > 75:
+        comments.append("전반적으로 매우 긍정적이고 활발한 상태로 보입니다.")
+        comments.append("활발한 표정과 감정 표현이 신체 전반에서 자연스럽게 나타나고 있습니다.")
+    if brow_score > 75 or nasolabial_folds_score > 75:
         comments.append("긴장한 상태일 수 있으며, 감정적으로 불안해 보일 수 있습니다.")
+        comments.append("눈썹이나 팔자주름의 큰 움직임은 감정적 긴장감을 반영할 수 있습니다.")
 
         # 코멘트를 '*'로 구분된 문자열로 반환
     return '*'.join(comments)
@@ -56,10 +94,13 @@ def generate_eye_blink_comment(total_blinks, duration_minutes=1):
 
     if total_blinks < ideal_blinks_per_minute[0]:
         comments.append(f"눈 깜박임 횟수가 {total_blinks}회로, 평균보다 적어 긴장된 상태일 수 있습니다. 1분에 15회에서 20회 깜빡이는 것이 적당합니다.")
+        comments.append(f"이는 스트레스나 집중력 증가로 인해 눈을 덜 깜빡이는 상태를 반영할 수 있습니다.")
     elif total_blinks > ideal_blinks_per_minute[1]:
         comments.append(f"눈 깜박임 횟수가 {total_blinks}회로, 평균보다 많아 피곤하거나 매우 불안한 상태일 수 있습니다. 1분에 15회에서 20회 깜빡이는 것이 적당합니다.")
+        comments.append(f"눈의 과도한 깜빡임은 눈의 피로감이나 감정적 불안감을 나타낼 수 있습니다.")
     else:
-        comments.append(f"눈 깜박임 횟수가 {total_blinks}회로, 적정 범위 내에 있으며 안정적인 상태입니다.")
+        comments.append(f"눈 깜빡임 횟수가 {total_blinks}회로, 적정 범위 내에 있으며 안정적인 상태입니다.")
+        comments.append(f"눈 깜빡임이 정상 범위이므로 집중력과 감정 상태가 비교적 안정적이라고 할 수 있습니다.")
 
     # 코멘트를 '*'로 구분된 문자열로 반환
     return '*'.join(comments)
