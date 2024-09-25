@@ -59,9 +59,18 @@ def text_analysis(text):
     word_list = get_nouns_list(text) #워드 클라우드용(단어집합)
     print('get_nouns_list')
 
+    fillertext_values = ', '.join([w['text'] for w in filler_words])
+    fillerweight_values = ', '.join([str(w['weight']) for w in filler_words])
+
+    text_values = ', '.join([w['text'] for w in word_list])
+    weight_values = ', '.join([str(w['weight']) for w in word_list])
+
+
     text_json = {
-        "fillerwords": filler_words,
+        "fillerwords": fillertext_values,
+        "fillerweights":fillerweight_values,
         "speak_end": speak_end,
-        "word_list": word_list
+        "text":text_values,
+        "weight": weight_values
     }
     return text_json
