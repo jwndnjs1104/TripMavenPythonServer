@@ -16,6 +16,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 # 표정 분석 결과에 따라 코멘트를 생성하는 함수
 def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasolabial_folds_score):
     comments = []
+    keywords = []
 
     # 입 움직임에 따른 코멘트
     if mouth_score <= 25:
@@ -27,9 +28,12 @@ def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasol
     elif 50 < mouth_score <= 75:
         comments.append("입 움직임이 적당하며, 일반적인 대화 중에 감정 표현이 잘 드러납니다.")
         comments.append("말하는 동안 적절한 비언어적 표현이 이루어지고 있습니다.")
+        keywords.append("능숙한")
     else:
         comments.append("입 움직임이 크며, 매우 활발하게 말하고 있는 것으로 보입니다.")
         comments.append("자신감이 높으며 적극적으로 의사소통을 하고 있습니다.")
+        keywords.append("능숙한")
+        keywords.append("활기찬")
 
     # 광대뼈 움직임에 따른 코멘트
     if cheekbones_score <= 25:
@@ -41,9 +45,12 @@ def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasol
     elif 50 < cheekbones_score <= 75:
         comments.append("광대뼈 움직임이 적당하며, 미소가 자연스럽게 나타납니다.")
         comments.append("긍정적인 감정이 적절히 드러나며 친근한 인상을 줍니다.")
+        keywords.append("친근한")
     else:
         comments.append("광대뼈 움직임이 커서 웃음이 많고 긍정적인 표정이 두드러집니다.")
         comments.append("웃음이 크고 자연스러워, 매우 즐거운 상태를 보여줍니다.")
+        keywords.append("친근한")
+        keywords.append("행복한")
 
     # 눈썹 움직임에 따른 코멘트
     if brow_score <= 25:
@@ -55,9 +62,13 @@ def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasol
     elif 50 < brow_score <= 75:
         comments.append("눈썹 움직임이 적당하며, 감정 표현이 자연스럽습니다.")
         comments.append("눈썹을 통한 감정 표현이 상황에 적절하게 이루어집니다.")
+        keywords.append("부드러운")
     else:
         comments.append("눈썹 움직임이 크며, 놀라거나 긴장된 상태를 보여줍니다.")
         comments.append("감정이 강하게 드러나며, 순간적인 반응이 뚜렷합니다.")
+        keywords.append("부드러운")
+        keywords.append("매력적인")
+
 
     # 팔자주름 변화에 따른 코멘트
     if nasolabial_folds_score <= 25:
@@ -69,9 +80,12 @@ def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasol
     elif 50 < nasolabial_folds_score <= 75:
         comments.append("팔자주름이 적당히 나타나며, 감정 표현이 잘 드러납니다.")
         comments.append("긍정적인 감정이나 즐거움이 비교적 자연스럽게 표현되고 있습니다.")
+        keywords.append("상냥한")
     else:
         comments.append("팔자주름이 많이 나타나며, 감정 표현이 매우 강하게 드러납니다.")
         comments.append("웃음이나 감정 표현이 강하며 매우 생동감 있는 표정입니다.")
+        keywords.append("상냥한")
+        keywords.append("생기 넘치는")
 
     # 종합적인 상태 평가
     if mouth_score > 75 and cheekbones_score > 75:
@@ -81,8 +95,12 @@ def generate_expression_comment(mouth_score, cheekbones_score, brow_score, nasol
         comments.append("긴장한 상태일 수 있으며, 감정적으로 불안해 보일 수 있습니다.")
         comments.append("눈썹이나 팔자주름의 큰 움직임은 감정적 긴장감을 반영할 수 있습니다.")
 
-        # 코멘트를 '*'로 구분된 문자열로 반환
-    return '*'.join(comments)
+    # 코멘트와 키워드를 JSON으로 반환
+    return {
+        "comments": '*'.join(comments),
+        "keywords": '*'.join(keywords)
+    }
+
 
 
 # 눈 깜박임 횟수에 따른 코멘트를 생성하는 함수
@@ -104,6 +122,7 @@ def generate_eye_blink_comment(total_blinks, duration_minutes=1):
 
     # 코멘트를 '*'로 구분된 문자열로 반환
     return '*'.join(comments)
+
 
 
 # 선 그래프를 그린 후 base64 형식으로 인코딩하여 반환하는 함수
@@ -351,6 +370,10 @@ class EyeCheck:
             Nasolabial_Folds_list[-1] if Nasolabial_Folds_list else 0
         )
 
+        # NoneType 방지를 위한 예외 처리
+        if not expression_comment:
+            expression_comment = {"comments": [], "keywords": []}
+
         # 얼굴 변화 데이터를 JSON 형식으로 반환
         face_json = {
             'eye': {
@@ -377,7 +400,8 @@ class EyeCheck:
                 },
                 'm_fps': m_fps
             },
-             'expression_comment': expression_comment  # 표정 분석 코멘트는 문자열로 반환
+            'expression_comment': expression_comment['comments'],  # 표정 분석 코멘트 리스트 반환
+            'expression_keywords': expression_comment['keywords']  # 키워드 반환
         }
 
         # 얼굴 변화 데이터를 선 그래프로 시각화
