@@ -3,10 +3,11 @@ from fastapi.responses import FileResponse
 from app.services.voice_check_service import Sound_Check_Class
 from app.services.nlp_check_service import text_analysis
 from app.services.whisperSTT_service import WhisperVoiceEvaluation
-import os, re, uuid, wave
+import os, re, wave
 import numpy as np
 from pydub import AudioSegment
 from moviepy.editor import VideoFileClip
+from app.services.face_service import plot_line_graph
 
 router = APIRouter()
 whisperModel = WhisperVoiceEvaluation()
@@ -128,13 +129,11 @@ def voice_run(filepath, sex):
     x = x.tolist()
     y = np.nan_to_num(interpolated)
     y = y.tolist()
+    base64Image = plot_line_graph(x,y,'Voice_Tone','Time','Hz')
 
     # 분석결과를 json 파일에 저장
     voice_json = {
-        "voice": {
-            "x": x,
-            "y": y
-        },
+        "voice": base64Image,
         "voice_mean": mean,
 
         "voice_std": std,

@@ -17,7 +17,7 @@ class OCRService:
         credentials = self.authenticate_service_account()
         image_content = base64.b64decode(base64Encoded)
         client = vision.ImageAnnotatorClient(credentials=credentials)
-        image = vision.Image(content=image_content)
+        image = vision.Image(content = image_content)
         return image, client
 
     def ocr_detect(self, base64Encoded):
@@ -30,7 +30,6 @@ class OCRService:
             responseTexts.append(extracted_text)
         return responseTexts
 
-
     def object_detect(self, base64Encoded):
         image, client = self.detect_init(base64Encoded)
         response = client.label_detection(image=image)
@@ -39,3 +38,4 @@ class OCRService:
         for label in labels:
             responseLabels.append(f'객체: {label.description},  정확도: {label.score}\n')
         return responseLabels
+

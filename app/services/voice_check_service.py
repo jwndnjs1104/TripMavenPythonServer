@@ -1,6 +1,7 @@
 import parselmouth
 import numpy as np
 import os
+import matplotlib.pyplot as plt  # 그래프 시각화를 위한 라이브러리
 
 # 음성 분석 클래스 입니다.
 class Sound_Check_Class:
