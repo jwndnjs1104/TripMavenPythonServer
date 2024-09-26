@@ -6,7 +6,6 @@ from fastapi import APIRouter, File, UploadFile
 from typing import Dict
 from app.services.face_service import process_video
 
-
 router = APIRouter()
 
 # 비디오 파일을 mp4로 변환하는 함수
@@ -19,7 +18,6 @@ def convert_to_mp4(input_file_path: str, output_file_path: str) -> bool:
     except subprocess.CalledProcessError as e:
         print(f"Error during conversion: {str(e)}")
         return False
-
 
 @router.post("/")
 async def upload_video(file: UploadFile = File(...)) -> Dict:
@@ -37,15 +35,20 @@ async def upload_video(file: UploadFile = File(...)) -> Dict:
     if not file.filename.endswith('.mp4'):
         conversion_success = convert_to_mp4(temp_file_path, mp4_temp_file_path)
         if not conversion_success:
+            # 파일 사용 후 삭제
+            if os.path.exists(temp_file_path):
+                os.remove(temp_file_path)
             return {"error": "비디오 변환 실패"}
 
         # 원본 파일 삭제
-        os.remove(temp_file_path)
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
     else:
         mp4_temp_file_path = temp_file_path
 
     # 비디오 처리 함수 호출
-    result = process_video(open(mp4_temp_file_path, "rb").read())
+    with open(mp4_temp_file_path, "rb") as video_file:  # 파일을 열고 처리
+        result = process_video(video_file.read())  # 비디오 처리
 
     # 변환된 mp4 파일 삭제
     if os.path.exists(mp4_temp_file_path):
