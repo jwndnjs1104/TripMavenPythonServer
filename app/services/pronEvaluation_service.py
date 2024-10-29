@@ -4,7 +4,8 @@ import base64
 
 #openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation"  # 영어
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/PronunciationKor" # 한국어
-accessKey = "79e5a1f4-d732-4baf-8d08-ed3fadbf88a3"
+#https://aiopen.etri.re.kr/serviceList 에 있는 발음평가 API를 쓰려 했으나 요청이 잘 들어가지 않아 쓰지 않음
+accessKey = "위 사이트에서 발급 받은 access 키 넣어야 함"
 
 class PronEvaluationService:
     def evaluate(self, encoded_voice, text):

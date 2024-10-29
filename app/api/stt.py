@@ -3,8 +3,9 @@ import sys
 import requests
 
 router = APIRouter()
-id = 'yq1nf7y6jv'
-secret_key = '5A8yk14sOGVhEHo6hmg4Kkw6ihf67c5SdgkayXuc'
+# 네이버 클라우드 stt api인데 우리 웹 어플리케이션에서는 사용 안함.
+id = '네이버 클라우드 stt id'
+secret_key = '자신의 네이버 클라우드 stt 시크릿키 넣기'
 
 @router.post("/")
 async def speech_to_text(voice: UploadFile):
