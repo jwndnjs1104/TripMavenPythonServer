@@ -57,3 +57,8 @@ pip install jamo
 실행법
 터미널에서 아래 코드 실행
 uvicorn app.main:app --port 8282 --reload
+
+※services/face_service.py 파일에서 EyeCheck 클래스의 모델 경로를 자신 경로로 바꿔야 함
+※api/voice_text_analysis.py 파일에서 SAVE_DIRECTORY 경로 자신 경로로 바꿔야 함
+
+
